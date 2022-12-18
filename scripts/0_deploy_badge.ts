@@ -9,7 +9,7 @@ async function main() {
   console.log(green(`deploy with account: ${dev.address}`));
 
   const RebaseBadge = await ethers.getContractFactory("RebaseBadge");
-  const badge = await upgrades.deployProxy(RebaseBadge, []);
+  const badge = await upgrades.deployProxy(RebaseBadge, ['Rebase Community Badge', 'ipfs://']);
   await badge.deployed();
 
   console.log(deployed.contracts)
