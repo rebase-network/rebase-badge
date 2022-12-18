@@ -1,0 +1,17 @@
+[
+  {
+    "chainId": 1,
+    "name": "mainnet",
+    "contract": "0xdEF2f273859Ae503dD3De855Eb5Bc7b2D642d59A"
+  },
+  {
+    "chainId": 97,
+    "name": "bsctest",
+    "contract": "0xc5c13B7eA0eB0D9ceC345C16349a2b114517b66b"
+  },
+  {
+    "chainId": 31337,
+    "name": "hardhat",
+    "contract": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+  }
+]
