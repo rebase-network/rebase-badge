@@ -97,7 +97,6 @@ export default function Step2(props: Iprops) {
     const [ethBalance, setethBalance] = useState<string>('0');
 
     const [tablelist, setTablelist] = useState<accountObj[]>([])
-    const [addressArray, setAddressArray] = useState<string[]>([]);
     const [pageSize] = useState<number>(200); // Default 200 transfer per tx
     const [badgeContract, setTokenContract] = useState<ethers.Contract | null>();
     const [badgeAddress, setBadgeAddress] = useState<string>('');
@@ -106,8 +105,8 @@ export default function Step2(props: Iprops) {
     const [tips, settips] = useState<string>('');
     const [txHashList, setTxHashList] = useState<string[]>([]);
     const [txHash, setTxHash] = useState<string>('');
-    const [tokenAddr, setTokenAddr] = useState<any[]>([]);
-    const [amountAddr, setAmountAddr] = useState<any[]>([]);
+    const [addressArray, setAddressArray] = useState<string[]>([]);
+    const [tokenIdArray, setTokenIdArray] = useState<any[]>([]);
     const [errorTips, setErrorTips] = useState<string>('');
     const [successArr, setSuccessArr] = useState<string[]>([]);
 
@@ -141,8 +140,8 @@ export default function Step2(props: Iprops) {
         const { addressesStr } = first;
 
         let lines = addressesStr.split('\n');
-        let addressArray = [];
-        let tokenIdArray = [];
+        let addresses = [];
+        let tokenIds = [];
 
         for (let index = 0; index < lines.length; index++) {
             const line = lines[index]?.trim();
@@ -162,12 +161,13 @@ export default function Step2(props: Iprops) {
                 continue;
             }
 
-            addressArray.push(address);
-            tokenIdArray.push(tokenId);
+            addresses.push(address);
+            tokenIds.push(tokenId);
         }
 
-        setAddressArray(addressArray);
-        console.log(`Total address : ${addressArray.length}`);
+        setAddressArray(addresses);
+        setTokenIdArray(tokenIds);
+        console.log(`Total address : ${addresses.length}`);
     }
 
     const initBadgeAddress = async () => {
@@ -216,6 +216,9 @@ export default function Step2(props: Iprops) {
 
         if (first == null) return;
 
+        console.log(`~~~~doMint`);
+
+
         const signer = web3Provider.getSigner(account);
         const badgeContract = new ethers.Contract(badgeAddress, badgeABI, web3Provider);
 
@@ -224,10 +227,10 @@ export default function Step2(props: Iprops) {
         let txHashArr: string[] = [];
 
         let mySuccessArr = [...successArr];
-        for (let index = 0; index < tokenAddr.length; index += pageSize) {
+        for (let index = 0; index < addressArray.length; index += pageSize) {
             txIndex++;
-            let addressArr = tokenAddr.slice(index, index + pageSize);
-            let tokenIdArr = amountAddr.slice(index, index + pageSize);
+            let addressArr = addressArray.slice(index, index + pageSize);
+            let tokenIdArr = tokenIdArray.slice(index, index + pageSize);
 
             settips(`Minting Badge in progress... (${txIndex}/${Math.ceil(addressArray.length / pageSize)})`);
 
@@ -361,7 +364,7 @@ export default function Step2(props: Iprops) {
                 <Button
                     variant="flat"
                     onClick={doMint}
-                >Send</Button>
+                >Mint</Button>
             </div>
         }
 

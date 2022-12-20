@@ -1,4 +1,4 @@
-import { Row, Col, Form, FloatingLabel, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Form, FloatingLabel, Button, Alert, Dropdown, DropdownButton } from 'react-bootstrap';
 import styled from "styled-components";
 import { ChangeEvent, useState, useEffect } from "react";
 import { useWeb3 } from "../api/connect";
@@ -81,7 +81,7 @@ export default function Step1(props: Props) {
             case 'token':
                 settokenId(value)
                 break;
-            case 'amounts':
+            case 'addressStr':
                 setaddressesStr(value)
                 break;
             default: break;
@@ -129,40 +129,6 @@ export default function Step1(props: Props) {
     }
 
     return <Box>
-        <Row>
-            <Col md={9}>
-                <FloatingLabel
-                    controlId="Token"
-                    label="Token"
-                    className="mb-3"
-                >
-                    <Form.Control
-                        type="text"
-                        name='token'
-                        placeholder="Token"
-                        value={tokenId}
-                        onChange={(e) => handleInput(e)}
-                    />
-                </FloatingLabel>
-            </Col>
-            <Col md={3}>
-
-                <FloatingLabel
-                    controlId="Decimals"
-                    label="Decimals"
-                    className="mb-3"
-                >
-                    <Form.Control
-                        type="text"
-                        name='decimals'
-                        placeholder="Decimals"
-                        value={0}
-                        readOnly={true}
-                    // onChange={(e)=>handleInput(e)}
-                    />
-                </FloatingLabel>
-            </Col>
-        </Row>
         <div className="mb-3">
             <Excel getChildrenMsg={getChildrenMsg} />
         </div>
@@ -176,7 +142,7 @@ export default function Step1(props: Props) {
                     <Form.Control
                         placeholder="Address,TokenId"
                         as="textarea"
-                        name='amounts'
+                        name='addressStr'
                         className="height50"
                         value={addressesStr}
                         onChange={(e) => handleInput(e)}
