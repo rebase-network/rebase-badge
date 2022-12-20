@@ -2,16 +2,16 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155BurnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 contract RebaseBadge is
+    Initializable,
     AccessControlUpgradeable,
-    OwnableUpgradeable,
-    ReentrancyGuardUpgradeable,
-    ERC1155BurnableUpgradeable
+    ERC1155Upgradeable,
+    ERC1155BurnableUpgradeable,
+    UUPSUpgradeable
 {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
@@ -19,19 +19,29 @@ contract RebaseBadge is
     mapping(uint256 => string) private tokenURIs;
     string public name;
 
+    constructor() {
+        _disableInitializers();
+    }
+
     function initialize(
         string memory _name,
         string memory _baseURI
     ) public virtual initializer {
-        __Ownable_init();
+        __ERC1155_init("");
+        __AccessControl_init();
         __ERC1155Burnable_init();
+        __UUPSUpgradeable_init();
 
         baseURI = _baseURI;
         name = _name;
 
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender());
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(MINTER_ROLE, msg.sender);
     }
+
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal override onlyRole(DEFAULT_ADMIN_ROLE) {}
 
     function uri(
         uint256 tokenId
@@ -42,16 +52,20 @@ contract RebaseBadge is
     function setURI(
         uint256 tokenId,
         string memory tokenURI
-    ) external onlyOwner {
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         tokenURIs[tokenId] = tokenURI;
         emit URI(uri(tokenId), tokenId);
     }
 
-    function setBaseURI(string memory _baseURI) external onlyOwner {
+    function setBaseURI(
+        string memory _baseURI
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         baseURI = _baseURI;
     }
 
-    function setName(string memory _name) external onlyOwner {
+    function setName(
+        string memory _name
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         name = _name;
     }
 
@@ -59,12 +73,7 @@ contract RebaseBadge is
         address to,
         uint256 id,
         bytes memory data
-    ) external virtual nonReentrant {
-        require(
-            hasRole(MINTER_ROLE, _msgSender()),
-            "must have minter role to mint"
-        );
-
+    ) external onlyRole(MINTER_ROLE) {
         _mint(to, id, 1, data);
     }
 
@@ -72,12 +81,7 @@ contract RebaseBadge is
         address to,
         uint256[] memory ids,
         bytes memory data
-    ) public virtual nonReentrant {
-        require(
-            hasRole(MINTER_ROLE, _msgSender()),
-            "must have minter role to mint"
-        );
-
+    ) external onlyRole(MINTER_ROLE) {
         require(to != address(0), "RebaseBadge: mint to the zero address");
 
         for (uint256 i = 0; i < ids.length; i++) {
@@ -89,11 +93,7 @@ contract RebaseBadge is
         address[] memory tos,
         uint256[] memory ids,
         bytes memory data
-    ) public virtual nonReentrant {
-        require(
-            hasRole(MINTER_ROLE, _msgSender()),
-            "must have minter role to mint"
-        );
+    ) external onlyRole(MINTER_ROLE) {
         for (uint256 i = 0; i < ids.length; i++) {
             _mint(tos[i], ids[i], 1, data);
         }
@@ -103,11 +103,7 @@ contract RebaseBadge is
         address[] memory tos,
         uint256 id,
         bytes memory data
-    ) public virtual nonReentrant {
-        require(
-            hasRole(MINTER_ROLE, _msgSender()),
-            "must have minter role to mint"
-        );
+    ) external onlyRole(MINTER_ROLE) {
         for (uint256 i = 0; i < tos.length; i++) {
             _mint(tos[i], id, 1, data);
         }
