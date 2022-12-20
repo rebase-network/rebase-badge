@@ -1,4 +1,4 @@
-import { Row, Col, Form, FloatingLabel, Button, Alert, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Row, Col, Form, FloatingLabel, Button, Alert } from 'react-bootstrap';
 import styled from "styled-components";
 import { ChangeEvent, useState, useEffect } from "react";
 import { useWeb3 } from "../api/connect";
