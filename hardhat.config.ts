@@ -4,6 +4,7 @@ import "hardhat-deploy";
 import "hardhat-abi-exporter";
 import "hardhat-contract-sizer";
 import "hardhat-docgen";
+import "hardhat-gas-reporter";
 
 import "@openzeppelin/hardhat-upgrades";
 import "@nomiclabs/hardhat-etherscan";
@@ -79,8 +80,13 @@ const config: HardhatUserConfig = {
   contractSizer: {
     alphaSort: true,
     disambiguatePaths: false,
-    runOnCompile: false,
+    runOnCompile: true,
     strict: true,
+  },
+  gasReporter: {
+    enabled: true,
+    currency: 'ETH',
+    gasPrice: 21
   },
   docgen: {
     path: './docs',
