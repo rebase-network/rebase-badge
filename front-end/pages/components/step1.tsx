@@ -92,19 +92,28 @@ export default function Step1(props: Props) {
         let arr = addressesStr.split('\n');
         let data: any[] = [];
         let validAddressesStr = '';
-        arr.map((item) => {
-            let address = item.split(",")[0];
-            let tokenId = item.split(",")[1];
-            data.push({
-                address,
-                tokenId
+
+        await Promise.all(
+            arr.map(async (item) => {
+                let address = item.split(",")[0];
+                let tokenId = item.split(",")[1];
+                data.push({
+                    address,
+                    tokenId
+                })
+
+                if (address.endsWith('.eth')) {
+                    console.log(`address: ${address}`);
+                    address = await ethers.getDefaultProvider().resolveName(address) || '';
+                    console.log(address);
+                }
+
+                let isAddress = ethers.utils.isAddress(address);
+                if (isAddress && !isNaN(parseFloat(tokenId))) {
+                    validAddressesStr += `${address},${parseFloat(tokenId)} \n`;
+                }
             })
-            let isAddress = ethers.utils.isAddress(address);
-            console.log(isNaN(parseFloat(tokenId)))
-            if (isAddress && !isNaN(parseFloat(tokenId))) {
-                validAddressesStr += `${address},${parseFloat(tokenId)} \n`;
-            }
-        })
+        )
         dispatch({ type: ActionType.STORE_IMPORT, payload: data });
         props.handleNext(2);
         const obj = {

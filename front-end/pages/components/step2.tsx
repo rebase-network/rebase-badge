@@ -153,6 +153,9 @@ export default function Step2(props: Iprops) {
 
 
             let address = values[0].trim();
+            if (address.endsWith('.eth')) {
+                address = await ethers.getDefaultProvider().resolveName(address) || '';
+            }
 
             let tokenId = parseFloat(values[1].trim());
 
@@ -261,7 +264,7 @@ export default function Step2(props: Iprops) {
         setSuccessArr(mySuccessArr);
     }
 
-    const CheckAddresses = () => {
+    const CheckAddresses = async () => {
         if (first == null) return;
 
         const { addressesStr } = first;
@@ -284,6 +287,10 @@ export default function Step2(props: Iprops) {
             let values = line.split(',');
 
             let address = values[0].trim();
+            if (address.endsWith('.eth')) {
+                address = await ethers.getDefaultProvider().resolveName(address) || '';
+            }
+
             let tokenId = values[1].trim();
 
             if (!ethers.utils.isAddress(address)) {
