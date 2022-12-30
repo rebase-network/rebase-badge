@@ -281,7 +281,7 @@ export default function Step2(props: Iprops) {
         for (let index = 0; index < lines.length; index++) {
             const line = lines[index].trim();
             if (line.length === 0) {
-                console.log('skip empty line');
+                console.log(`skip empty line ${index}`);
                 continue;
             }
             let values = line.split(',');
