@@ -90,13 +90,14 @@ export default function Step1(props: Props) {
     const nextPage = async () => {
 
         let arr = addressesStr.split('\n');
+        console.log(`arr len: ${arr.length}`)
         let data: any[] = [];
         let validAddressesStr = '';
 
         await Promise.all(
             arr.map(async (item) => {
-                let address = item.split(",")[0];
-                let tokenId = item.split(",")[1];
+                let address = item.split(",")[0].trim();
+                let tokenId = item.split(",")[1].trim();
                 data.push({
                     address,
                     tokenId
@@ -110,7 +111,9 @@ export default function Step1(props: Props) {
 
                 let isAddress = ethers.utils.isAddress(address);
                 if (isAddress && !isNaN(parseFloat(tokenId))) {
-                    validAddressesStr += `${address},${parseFloat(tokenId)} \n`;
+                    validAddressesStr += `${address},${parseFloat(tokenId)}\n`;
+                } else {
+                    console.log(`ivalide address ${address}, ${tokenId}`)
                 }
             })
         )

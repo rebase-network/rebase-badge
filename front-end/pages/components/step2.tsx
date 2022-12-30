@@ -119,10 +119,13 @@ export default function Step2(props: Iprops) {
         let addressList = addressesStr.split('\n');
         let arr: accountObj[] = [];
         addressList.map(item => {
-            if (!item) return;
+            if (!item) {
+                console.log(`invalide item ${item}`);
+                return
+            };
             arr.push({
-                address: item.split(',')[0],
-                tokenId: item.split(',')[1],
+                address: item.split(',')[0].trim(),
+                tokenId: item.split(',')[1].trim(),
             })
         })
 
@@ -153,11 +156,12 @@ export default function Step2(props: Iprops) {
 
 
             let address = values[0].trim();
+            let tokenId = parseFloat(values[1].trim());
+
             if (address.endsWith('.eth')) {
                 address = await ethers.getDefaultProvider().resolveName(address) || '';
             }
 
-            let tokenId = parseFloat(values[1].trim());
 
             if (!ethers.utils.isAddress(address)) {
                 console.log('Invalid address: ', address);

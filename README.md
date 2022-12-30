@@ -31,7 +31,7 @@ npx hardhat run scripts/1_upgrade_badge.ts --network ethereum
 ```
 
 ### Contracts
-Ethereum Mainet:   
+Ethereum Mainet:  
 - Badge 0x9cFC620caD1F0134144E7E91623d9Cb835aAbce4
 - Proxy 0xe45c7082D76AeF3FE1904Eefd550829D9980ca5D
 
