@@ -6,7 +6,7 @@ const nextConfig = {
   experimental:{
     styledCompontents:true
   },
-  assetPrefix: isProd ?'/rebase-badge':'',
+  assetPrefix: '',
 }
 
 module.exports = nextConfig
