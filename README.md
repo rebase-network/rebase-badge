@@ -1,6 +1,10 @@
 # Rebase Badge
 
-Rebase Badge for the Rebase Community.
+Rebase Badge for the Rebase Community. 
+
+The admin webpage is https://badge.rebase.community
+
+OpenSea Collection: https://opensea.io/collection/rebase-nft
 
 
 # Front-End
